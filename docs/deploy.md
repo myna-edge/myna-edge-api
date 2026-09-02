@@ -1,37 +1,41 @@
 # 部署 API 到 Cloudflare
 
-推荐方式：**Dashboard 创建 D1** + **GitHub 连接 Workers Builds**。  
-`database_id` 和 token **不必**写进仓库；token 只在 Cloudflare 页面配置。
+推荐方式：**Deploy to Cloudflare**（创建页会预填绑定/变量名）。  
+`database_id` 和 token **不必**写进仓库；token 只在 Cloudflare 页面填值。
 
-## 1. 创建 D1
+## 1. 一键部署（推荐）
 
-1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **D1 SQL Database** → **Create**
-2. 名称填 `myna`（与 `wrangler.toml` 中 `database_name` 一致）
+打开：
 
-## 2. 用 GitHub 连接部署
+https://deploy.workers.cloudflare.com/?url=https://github.com/myna-edge/myna-edge-api
 
-1. Dashboard → **Workers & Pages** → **Create** → 选择 **Import a repository**（连接 GitHub 上的 `myna-edge-api`）
-2. 构建设置大致如下：
-   - **Deploy command**：`npx wrangler deploy`（或 `npm run deploy`）
-   - 一般无需额外 Build command
-3. 首次部署成功后，确认 Worker 名称为 `myna-api`（与 `wrangler.toml` 的 `name` 一致）
-4. **Settings → Bindings**：应存在 D1 绑定 `DB` → 数据库 `myna`  
-   若缺失，手动添加：Type = D1，Variable name = `DB`，选择刚创建的 `myna`
+或点击仓库 README 中的 **Deploy to Cloudflare** 按钮。
 
-之后每次 push `main` 会自动重新部署。
+创建时 Cloudflare 会：
 
-## 3. 环境变量 / Secrets（在网页上填）
-
-Worker `myna-api` → **Settings** → **Variables and Secrets**：
+- 按 `wrangler.toml` 准备 D1（绑定名 `DB`，库名 `myna`）
+- 按 `.dev.vars.example` 预填 Secret 名称，你只需填写：
 
 | 变量 | 说明 |
 |------|------|
 | `MYNA_INGEST_TOKEN` | 采集鉴权 token（强烈建议） |
 | `MYNA_ADMIN_TOKEN` | 保护 Webhook 配置写入（可选） |
 
-不要把这些值提交到 Git。
+部署完成后用 Worker URL 探活（见下方）。
 
-## 4. 探活
+## 2. 手动：GitHub 连接 Workers Builds
+
+若不使用 Deploy 按钮：
+
+1. （可选先做）Dashboard → **D1** → 创建数据库，名称 `myna`
+2. **Workers & Pages** → **Create** → **Import a repository** → 选择 `myna-edge-api`
+3. **Deploy command**：`npx wrangler deploy`（或 `npm run deploy`）
+4. 确认 **Settings → Bindings** 有 D1：`DB` → `myna`（缺失则手动添加）
+5. **Settings → Variables and Secrets** 添加上表中的 token（名称需一致）
+
+之后每次 push `main` 会自动重新部署。
+
+## 3. 探活
 
 ```powershell
 curl.exe -s https://myna-api.<子域>.workers.dev/api/health
