@@ -3,14 +3,17 @@ main = "src/worker.ts"
 compatibility_date = "2025-08-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Open-source default: Cloudflare D1 only (no Turso account required)
+# Open-source default: Cloudflare D1 (no Turso account required)
 [vars]
 MYNA_STORAGE = "d1"
 
+# 不提交 database_id：在 Dashboard 创建名为 myna 的 D1，
+# 再通过 Workers（Git 连接）部署；绑定名必须是 DB。
+# 详见 docs/deploy.md
 [[d1_databases]]
 binding = "DB"
 database_name = "myna"
-# 从 Cloudflare Dashboard 复制 Database ID，见 docs/deploy.md
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
 
-# 生产环境建议设置 MYNA_INGEST_TOKEN（Dashboard → Worker → Variables and Secrets）
+# 生产环境在 Dashboard → Settings → Variables and Secrets 配置：
+#   MYNA_INGEST_TOKEN（强烈建议）
+#   MYNA_ADMIN_TOKEN（可选，保护 Webhook 写入）

@@ -1,13 +1,16 @@
 {
 	"folders": [
 		{
+			"name": "myna-edge-api",
 			"path": "."
 		},
 		{
-			"path": "../myna-edge-sdk"
+			"name": "myna-edge-web",
+			"path": "../myna-edge-web"
 		},
 		{
-			"path": "../myna-edge-web"
+			"name": "myna-edge-sdk",
+			"path": "../myna-edge-sdk"
 		}
 	]
 }

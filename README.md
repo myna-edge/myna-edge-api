@@ -13,13 +13,16 @@ API 默认 `http://127.0.0.1:8787`，数据写入 `./data/myna.db`。
 
 可选：复制 `.env.example` 为 `.env` 并设置 `MYNA_INGEST_TOKEN` 等变量。
 
-## 部署
+## 部署（推荐）
 
-1. 在 Cloudflare Dashboard 创建 D1 数据库 `myna`，将 Database ID 填入 `wrangler.toml`
-2. `npx wrangler login`
-3. `npm run deploy`
+面向使用者的标准路径：
 
-详见 [docs/deploy.md](./docs/deploy.md)。
+1. 在 Cloudflare Dashboard 创建 D1 数据库，名称 `myna`
+2. 用 GitHub 连接本仓库，通过 Workers Builds 部署
+3. 在 Worker **Variables and Secrets** 中配置 `MYNA_INGEST_TOKEN`（等）
+4. 确认 Bindings 中有 D1：`DB` → `myna`
+
+**不必**把 `database_id` 或 token 写进仓库。详见 [docs/deploy.md](./docs/deploy.md)。
 
 ## 结构
 
