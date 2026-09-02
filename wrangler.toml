@@ -14,6 +14,5 @@ MYNA_STORAGE = "d1"
 binding = "DB"
 database_name = "myna-edge"
 
-# 生产环境在 Dashboard → Settings → Variables and Secrets 配置：
-#   MYNA_INGEST_TOKEN（强烈建议）
-#   MYNA_ADMIN_TOKEN（可选，保护 Webhook 写入）
+# 生产环境可选 Secrets（Dashboard → Variables and Secrets；不配也能跑）：
+#   MYNA_INGEST_TOKEN、MYNA_ADMIN_TOKEN

@@ -1,7 +1,8 @@
-# Deploy to Cloudflare 会读取本文件，在创建页预填 Secret 名称（用户只需填值）。
+# Deploy to Cloudflare 会读取本文件，在创建页预填 Secret 名称。
+# 不需要鉴权时两项留空即可（最小部署可不配）。
 # 本地：复制为 .dev.vars 供 wrangler / 本地 Worker 使用。
 
-# 强烈建议：公开 ingest 时启用采集鉴权
+# 可选：公开 ingest 时建议启用采集鉴权
 MYNA_INGEST_TOKEN=
 
 # 可选：保护 Webhook 配置写入；启用后 Web 需配置 VITE_MYNA_ADMIN_TOKEN
