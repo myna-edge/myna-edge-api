@@ -1,0 +1,26 @@
+{
+  "name": "myna-edge-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/storage"
+  ],
+  "scripts": {
+    "dev": "tsx watch src/node.ts",
+    "start": "tsx src/node.ts",
+    "deploy": "wrangler deploy",
+    "cf:typegen": "wrangler types"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.1",
+    "@myna-edge/storage": "*",
+    "hono": "^4.9.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsx": "^4.20.5",
+    "typescript": "^5",
+    "wrangler": "^4.127.1"
+  }
+}

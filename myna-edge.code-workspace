@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../myna-edge-sdk"
+		},
+		{
+			"path": "../myna-edge-web"
+		}
+	]
+}

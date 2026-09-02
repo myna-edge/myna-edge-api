@@ -1,0 +1,16 @@
+name = "myna-api"
+main = "src/worker.ts"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Open-source default: Cloudflare D1 only (no Turso account required)
+[vars]
+MYNA_STORAGE = "d1"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "myna"
+# 从 Cloudflare Dashboard 复制 Database ID，见 docs/deploy.md
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# 生产环境建议设置 MYNA_INGEST_TOKEN（Dashboard → Worker → Variables and Secrets）
