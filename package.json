@@ -15,7 +15,7 @@
   "cloudflare": {
     "bindings": {
       "DB": {
-        "description": "D1 数据库绑定（变量名必须为 `DB`）。Deploy 按钮会按 `wrangler.toml` 自动创建/绑定名为 `myna` 的库。"
+        "description": "D1 数据库绑定（变量名必须为 `DB`）。Deploy 按钮会按 `wrangler.toml` 自动创建/绑定名为 `myna-edge` 的库。"
       },
       "MYNA_INGEST_TOKEN": {
         "description": "采集鉴权 token（**强烈建议**）。SDK / 接入方上报时需携带同一 token。"

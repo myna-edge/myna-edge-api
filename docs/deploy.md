@@ -13,7 +13,7 @@ https://deploy.workers.cloudflare.com/?url=https://github.com/myna-edge/myna-edg
 
 创建时 Cloudflare 会：
 
-- 按 `wrangler.toml` 准备 D1（绑定名 `DB`，库名 `myna`）
+- 按 `wrangler.toml` 准备 D1（绑定名 `DB`，库名 `myna-edge`）
 - 按 `.dev.vars.example` 预填 Secret 名称，你只需填写：
 
 | 变量 | 说明 |
@@ -27,10 +27,10 @@ https://deploy.workers.cloudflare.com/?url=https://github.com/myna-edge/myna-edg
 
 若不使用 Deploy 按钮：
 
-1. （可选先做）Dashboard → **D1** → 创建数据库，名称 `myna`
+1. （可选先做）Dashboard → **D1** → 创建数据库，名称 `myna-edge`
 2. **Workers & Pages** → **Create** → **Import a repository** → 选择 `myna-edge-api`
 3. **Deploy command**：`npx wrangler deploy`（或 `npm run deploy`）
-4. 确认 **Settings → Bindings** 有 D1：`DB` → `myna`（缺失则手动添加）
+4. 确认 **Settings → Bindings** 有 D1：`DB` → `myna-edge`（缺失则手动添加）
 5. **Settings → Variables and Secrets** 添加上表中的 token（名称需一致）
 
 之后每次 push `main` 会自动重新部署。
@@ -38,7 +38,7 @@ https://deploy.workers.cloudflare.com/?url=https://github.com/myna-edge/myna-edg
 ## 3. 探活
 
 ```powershell
-curl.exe -s https://myna-api.<子域>.workers.dev/api/health
+curl.exe -s https://myna-edge-api.<子域>.workers.dev/api/health
 ```
 
 期望响应里包含 `storage: "d1"`。

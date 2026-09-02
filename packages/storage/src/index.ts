@@ -71,8 +71,8 @@ export async function getStorage(): Promise<StorageDriver> {
       if (!db) {
         throw new Error(
           `[myna] Storage "d1" needs the Worker D1 binding (env.DB).\n` +
-            `  1) Cloudflare Dashboard 创建 D1，名称 myna\n` +
-            `  2) Worker Settings → Bindings：添加 D1，变量名 DB → 选择 myna\n` +
+            `  1) Cloudflare Dashboard 创建 D1，名称 myna-edge\n` +
+            `  2) Worker Settings → Bindings：添加 D1，变量名 DB → 选择 myna-edge\n` +
             `  3) 重新部署（GitHub Workers Builds 或 wrangler deploy）`,
         );
       }

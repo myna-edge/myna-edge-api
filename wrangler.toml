@@ -1,4 +1,4 @@
-name = "myna-api"
+name = "myna-edge-api"
 main = "src/worker.ts"
 compatibility_date = "2025-08-01"
 compatibility_flags = ["nodejs_compat"]
@@ -7,12 +7,12 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 MYNA_STORAGE = "d1"
 
-# 不提交 database_id：在 Dashboard 创建名为 myna 的 D1，
+# 不提交 database_id：在 Dashboard 创建名为 myna-edge 的 D1，
 # 再通过 Workers（Git 连接）部署；绑定名必须是 DB。
 # 详见 docs/deploy.md
 [[d1_databases]]
 binding = "DB"
-database_name = "myna"
+database_name = "myna-edge"
 
 # 生产环境在 Dashboard → Settings → Variables and Secrets 配置：
 #   MYNA_INGEST_TOKEN（强烈建议）
