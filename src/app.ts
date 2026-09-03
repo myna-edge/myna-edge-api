@@ -131,7 +131,18 @@ export function createApp() {
     const denied = requireAdmin(c);
     if (denied) return denied;
     const storage = await getStorage();
-    const config = await storage.getWebhookConfig();
+    let config = await storage.getWebhookConfig();
+    const contentType = c.req.header("content-type") || "";
+    if (contentType.includes("application/json")) {
+      try {
+        const body = (await c.req.json()) as Partial<WebhookConfig>;
+        if (body && typeof body === "object") {
+          config = normalizeWebhookInput(body);
+        }
+      } catch {
+        /* keep saved config */
+      }
+    }
     const error = validateWebhookConfig({ ...config, enabled: true });
     if (error) return c.json({ error }, 400);
     try {
