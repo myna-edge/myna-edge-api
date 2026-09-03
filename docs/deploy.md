@@ -25,7 +25,9 @@ https://deploy.workers.cloudflare.com/?url=https://github.com/myna-edge/myna-edg
 创建时 Cloudflare 会：
 
 - 按 `wrangler.toml` **自动准备 D1**（绑定名 `DB`，库名 `myna-edge`），一般不必先去 Dashboard 建库
-- 按 `.dev.vars.example` **预填** Secret 名称；不需要鉴权时两项**留空即可**
+- **不会**强制填写 token（`.dev.vars.example` 里已注释可选 Secret，避免 Deploy 页当成必填）
+
+需要鉴权时，部署完成后到 Worker **Variables and Secrets** 自行添加：
 
 | 变量 | 说明 |
 |------|------|
