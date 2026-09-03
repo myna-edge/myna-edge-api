@@ -75,14 +75,7 @@ function normalizeWebhookInput(body: Partial<WebhookConfig>): WebhookConfig {
   return {
     enabled: Boolean(body.enabled),
     url: typeof body.url === "string" ? body.url.trim() : "",
-    format:
-      body.format === "feishu" ||
-      body.format === "wecom" ||
-      body.format === "slack" ||
-      body.format === "generic" ||
-      body.format === "auto"
-        ? body.format
-        : "auto",
+    signSecret: typeof body.signSecret === "string" ? body.signSecret.trim() : "",
     consoleUrl: typeof body.consoleUrl === "string" ? body.consoleUrl.trim() : "",
     notifyNew: body.notifyNew !== false,
     notifyReopened: body.notifyReopened !== false,

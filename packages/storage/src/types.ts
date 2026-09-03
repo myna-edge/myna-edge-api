@@ -124,7 +124,7 @@ export type IngestResult = {
   alert?: "new" | "reopened";
 };
 
-export type { WebhookAlertKind, WebhookConfig, WebhookFormat } from "./webhook-config.js";
+export type { WebhookAlertKind, WebhookConfig } from "./webhook-config.js";
 export {
   DEFAULT_WEBHOOK_CONFIG,
   parseWebhookConfig,

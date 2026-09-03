@@ -15,7 +15,6 @@ export type {
   StorageKind,
   WebhookAlertKind,
   WebhookConfig,
-  WebhookFormat,
 } from "./types.js";
 export {
   DEFAULT_WEBHOOK_CONFIG,

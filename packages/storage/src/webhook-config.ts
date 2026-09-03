@@ -1,9 +1,8 @@
-export type WebhookFormat = "auto" | "feishu" | "wecom" | "slack" | "generic";
-
 export type WebhookConfig = {
   enabled: boolean;
   url: string;
-  format: WebhookFormat;
+  /** DingTalk robot sign secret (SEC…). Empty when using keyword auth. */
+  signSecret: string;
   /** Base URL of the console, e.g. https://myna.example.com */
   consoleUrl: string;
   notifyNew: boolean;
@@ -15,17 +14,11 @@ export type WebhookAlertKind = "new" | "reopened";
 export const DEFAULT_WEBHOOK_CONFIG: WebhookConfig = {
   enabled: false,
   url: "",
-  format: "auto",
+  signSecret: "",
   consoleUrl: "",
   notifyNew: true,
   notifyReopened: true,
 };
-
-const FORMATS = new Set<WebhookFormat>(["auto", "feishu", "wecom", "slack", "generic"]);
-
-export function isWebhookFormat(value: unknown): value is WebhookFormat {
-  return typeof value === "string" && FORMATS.has(value as WebhookFormat);
-}
 
 export function parseWebhookConfig(raw: string | null | undefined): WebhookConfig {
   if (!raw?.trim()) return { ...DEFAULT_WEBHOOK_CONFIG };
@@ -34,7 +27,7 @@ export function parseWebhookConfig(raw: string | null | undefined): WebhookConfi
     return {
       enabled: Boolean(parsed.enabled),
       url: typeof parsed.url === "string" ? parsed.url.trim() : "",
-      format: isWebhookFormat(parsed.format) ? parsed.format : "auto",
+      signSecret: typeof parsed.signSecret === "string" ? parsed.signSecret.trim() : "",
       consoleUrl: typeof parsed.consoleUrl === "string" ? parsed.consoleUrl.trim() : "",
       notifyNew: parsed.notifyNew !== false,
       notifyReopened: parsed.notifyReopened !== false,
@@ -48,7 +41,7 @@ export function serializeWebhookConfig(config: WebhookConfig): string {
   return JSON.stringify({
     enabled: config.enabled,
     url: config.url.trim(),
-    format: config.format,
+    signSecret: config.signSecret.trim(),
     consoleUrl: config.consoleUrl.trim(),
     notifyNew: config.notifyNew,
     notifyReopened: config.notifyReopened,

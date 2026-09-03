@@ -1,4 +1,4 @@
-import type { Issue, WebhookAlertKind, WebhookConfig, WebhookFormat } from "@myna-edge/storage";
+import type { Issue, WebhookAlertKind, WebhookConfig } from "@myna-edge/storage";
 
 export type WebhookPayload = {
   alert: WebhookAlertKind | "test";
@@ -6,12 +6,13 @@ export type WebhookPayload = {
   consoleUrl?: string;
 };
 
-function resolveFormat(config: WebhookConfig): Exclude<WebhookFormat, "auto"> {
-  if (config.format !== "auto") return config.format;
-  const url = config.url.toLowerCase();
-  if (url.includes("open.feishu.cn") || url.includes("open.larksuite.com")) return "feishu";
-  if (url.includes("qyapi.weixin.qq.com")) return "wecom";
-  if (url.includes("hooks.slack.com")) return "slack";
+type ResolvedFormat = "feishu" | "wecom" | "dingtalk" | "generic";
+
+function resolveFormat(url: string): ResolvedFormat {
+  const lower = url.toLowerCase();
+  if (lower.includes("open.feishu.cn") || lower.includes("open.larksuite.com")) return "feishu";
+  if (lower.includes("qyapi.weixin.qq.com")) return "wecom";
+  if (lower.includes("oapi.dingtalk.com")) return "dingtalk";
   return "generic";
 }
 
@@ -41,11 +42,41 @@ function buildText(payload: WebhookPayload, config: WebhookConfig): string {
   return lines.join("\n");
 }
 
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]!);
+  return btoa(binary);
+}
+
+/** DingTalk custom robot sign: https://open.dingtalk.com/document/robots/customize-robot-security-settings */
+async function signDingTalk(secret: string, timestamp: number): Promise<string> {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const mac = await crypto.subtle.sign("HMAC", key, enc.encode(`${timestamp}\n${secret}`));
+  return encodeURIComponent(bytesToBase64(new Uint8Array(mac)));
+}
+
+async function resolveRequestUrl(config: WebhookConfig): Promise<string> {
+  const secret = config.signSecret.trim();
+  if (!secret || resolveFormat(config.url) !== "dingtalk") return config.url;
+
+  const timestamp = Date.now();
+  const sign = await signDingTalk(secret, timestamp);
+  const sep = config.url.includes("?") ? "&" : "?";
+  return `${config.url}${sep}timestamp=${timestamp}&sign=${sign}`;
+}
+
 export function buildWebhookBody(
   config: WebhookConfig,
   payload: WebhookPayload,
 ): { headers: Record<string, string>; body: string } {
-  const format = resolveFormat(config);
+  const format = resolveFormat(config.url);
   const text = buildText(payload, config);
   const headers: Record<string, string> = { "Content-Type": "application/json" };
 
@@ -59,20 +90,13 @@ export function buildWebhookBody(
     };
   }
 
-  if (format === "wecom") {
+  if (format === "wecom" || format === "dingtalk") {
     return {
       headers,
       body: JSON.stringify({
         msgtype: "text",
         text: { content: text },
       }),
-    };
-  }
-
-  if (format === "slack") {
-    return {
-      headers,
-      body: JSON.stringify({ text }),
     };
   }
 
@@ -103,7 +127,8 @@ export async function sendWebhook(config: WebhookConfig, payload: WebhookPayload
   if (!config.enabled || !config.url) return;
 
   const { headers, body } = buildWebhookBody(config, payload);
-  const res = await fetch(config.url, {
+  const url = await resolveRequestUrl(config);
+  const res = await fetch(url, {
     method: "POST",
     headers,
     body,
