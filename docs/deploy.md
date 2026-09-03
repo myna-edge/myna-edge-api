@@ -9,8 +9,7 @@
 |------|----------|
 | D1（库名 `myna-edge`，绑定 `DB`） | 必须，但通常**自动创建/绑定** |
 | `MYNA_STORAGE=d1` | 已在 `wrangler.toml`，无需再填 |
-| `MYNA_INGEST_TOKEN` | **可选**。不配也能采集；公开环境建议配置 |
-| `MYNA_ADMIN_TOKEN` | **可选**。不配也能改 Webhook；配了则 Web 需同步 `VITE_MYNA_ADMIN_TOKEN` |
+| `MYNA_SECRET` | **可选**。同时保护采集与 Webhook 写入；Web 用 `VITE_MYNA_SECRET` / 设置页密钥 |
 
 最小部署：**可以一个 Variables / Secrets 都不手动加**。
 
@@ -31,8 +30,7 @@ https://deploy.workers.cloudflare.com/?url=https://github.com/myna-edge/myna-edg
 
 | 变量 | 说明 |
 |------|------|
-| `MYNA_INGEST_TOKEN` | 可选。采集鉴权 |
-| `MYNA_ADMIN_TOKEN` | 可选。保护 Webhook 写入 |
+| `MYNA_SECRET` | 可选。采集 + Webhook 共用密钥 |
 
 部署完成后用 Worker URL 探活（见下方）。
 
@@ -55,7 +53,7 @@ https://deploy.workers.cloudflare.com/?url=https://github.com/myna-edge/myna-edg
 
 ### 改完变量要不要 Rebuild？
 
-- **运行时 Secrets / Variables**（如 `MYNA_INGEST_TOKEN`）：在页面保存后 **Save and Deploy** 即可，通常**不必**重新 Build
+- **运行时 Secrets / Variables**（如 `MYNA_SECRET`）：在页面保存后 **Save and Deploy** 即可，通常**不必**重新 Build
 - **Bindings**（如后来才加的 D1）：需要重新部署一次（触发 Build 或 `wrangler deploy`）
 
 ## 3. 探活
@@ -72,7 +70,7 @@ curl.exe -s https://myna-edge-api.<子域>.workers.dev/api/health
 
 1. 部署本仓库（API）
 2. 部署 [myna-edge-web](https://github.com/myna-edge/myna-edge-web)（Pages，填 `VITE_API_BASE`）
-3. 用 [myna-edge-sdk](https://github.com/myna-edge/myna-edge-sdk) 或接入页说明上报到 `https://<api>/api/ingest`
+3. 用 [myna-edge-sdk](https://github.com/myna-edge/myna-edge-sdk) 或接入页说明上报到 API 根地址（SDK 自动请求 `/api/ingest`）
 
 ## 可选：本地 CLI 部署
 

@@ -1,8 +1,7 @@
 # Deploy to Cloudflare 会把「未注释」的键当成创建页必填 Secret。
-# Token 均为可选，故默认注释掉；需要鉴权时再取消注释，或部署后在
+# 密钥可选，故默认注释掉；需要鉴权时再取消注释，或部署后在
 # Dashboard → Variables and Secrets 中添加。
 #
 # 本地：复制本文件为 .dev.vars，按需取消注释并填值。
 
-# MYNA_INGEST_TOKEN=
-# MYNA_ADMIN_TOKEN=
+# MYNA_SECRET=

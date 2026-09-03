@@ -15,4 +15,4 @@ binding = "DB"
 database_name = "myna-edge"
 
 # 生产环境可选 Secrets（Dashboard → Variables and Secrets；不配也能跑）：
-#   MYNA_INGEST_TOKEN、MYNA_ADMIN_TOKEN
+#   MYNA_SECRET

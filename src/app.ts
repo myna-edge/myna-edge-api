@@ -10,14 +10,9 @@ import {
 } from "@myna-edge/storage";
 import { dispatchIssueAlert, sendWebhook } from "./webhook.js";
 
-function expectedIngestToken(): string | null {
-  const token = process.env.MYNA_INGEST_TOKEN?.trim();
-  return token || null;
-}
-
-function expectedAdminToken(): string | null {
-  const token = process.env.MYNA_ADMIN_TOKEN?.trim();
-  return token || null;
+function expectedSecret(): string | null {
+  const value = process.env.MYNA_SECRET?.trim();
+  return value || null;
 }
 
 function extractBearerToken(c: Context): string | null {
@@ -33,7 +28,7 @@ function extractBearerToken(c: Context): string | null {
 }
 
 function requireAdmin(c: Context): Response | null {
-  const expected = expectedAdminToken();
+  const expected = expectedSecret();
   if (!expected) return null;
   const got = extractBearerToken(c);
   if (got !== expected) {
@@ -112,8 +107,8 @@ export function createApp() {
     return c.json({
       ok: true,
       storage: process.env.MYNA_STORAGE || "sqlite",
-      ingestAuth: Boolean(expectedIngestToken()),
-      adminAuth: Boolean(expectedAdminToken()),
+      ingestAuth: Boolean(expectedSecret()),
+      adminAuth: Boolean(expectedSecret()),
       webhook: webhook.enabled && Boolean(webhook.url),
     });
   });
@@ -166,7 +161,7 @@ export function createApp() {
         payload = text.trim() ? (JSON.parse(text) as IngestPayload & { token?: string }) : {};
       }
 
-      const expected = expectedIngestToken();
+      const expected = expectedSecret();
       if (expected) {
         const got = extractIngestToken(c, payload);
         if (got !== expected) {
